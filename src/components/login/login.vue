@@ -39,9 +39,11 @@ export default {
       //   data,
       //   meta: { msg, status }
       // } = res.data
-      const { meta: { msg, status } } = res.data
+      const { data, meta: { msg, status } } = res.data
       // 登录成功
       if (status === 200) {
+        // 0.保存token值
+        localStorage.setItem('token', data.token)
         // 1.跳转home
         this.$router.push({name: 'home'})
         this.$message.success(msg)
