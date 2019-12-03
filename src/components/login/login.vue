@@ -8,7 +8,12 @@
       <el-form-item label="密码">
         <el-input v-model="formdata.password"></el-input>
       </el-form-item>
-        <el-button type="primary" class="login-btn" @click.prevent = 'handleLogin'>登录</el-button>
+      <el-button
+        type="primary"
+        class="login-btn"
+        @click.prevent="handleLogin"
+        @keyup.enter.native="loginEnter('loginData')"
+      >登录</el-button>
     </el-form>
   </div>
 </template>
@@ -23,14 +28,60 @@ export default {
       }
     }
   },
+  created () {
+    var _this = this
+    document.onkeydown = function (e) {
+      if (window.event === undefined) {
+        var key = e.keyCode
+      } else {
+        key = window.event.keyCode
+      }
+      if (key === 13) {
+        _this.loginEnter('loginData')
+      }
+    }
+  },
   methods: {
     // 登录请求
+    loginEnter () {
+      this.$http
+        .get('login', {
+          params: {
+            username: this.formdata.username,
+            password: this.formdata.password
+          }
+        })
+        .then(res => {
+          const {
+            data,
+            meta: { msg, status }
+          } = res.data
+          // 登录成功
+          if (status === 200) {
+            // 0.保存token值
+            localStorage.setItem('token', data.token)
+            // 1.跳转home
+            this.$router.push({ name: 'home' })
+            this.$message.success(msg)
+          } else {
+            this.$message.error(msg)
+          }
+        })
+        .then(function (result) {
+          // 在请求成功后把document.onkeydown置为undefined
+          document.onkeydown = undefined
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+    },
     async handleLogin () {
       // 让异步代码ajax看起来像同步代码
-      const res = await this.$http.get('login', {params: {
-        username: this.formdata.username,
-        password: this.formdata.password
-      }
+      const res = await this.$http.get('login', {
+        params: {
+          username: this.formdata.username,
+          password: this.formdata.password
+        }
       })
       // this.$http.post('login', this.formdata)
       // .then(res => {
@@ -39,13 +90,16 @@ export default {
       //   data,
       //   meta: { msg, status }
       // } = res.data
-      const { data, meta: { msg, status } } = res.data
+      const {
+        data,
+        meta: { msg, status }
+      } = res.data
       // 登录成功
       if (status === 200) {
         // 0.保存token值
         localStorage.setItem('token', data.token)
         // 1.跳转home
-        this.$router.push({name: 'home'})
+        this.$router.push({ name: 'home' })
         this.$message.success(msg)
       } else {
         this.$message.error(msg)

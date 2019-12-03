@@ -34,7 +34,7 @@
             </el-menu-item>
           </el-submenu>
           <!-- 权限管理 -->
-           <el-submenu index="2">
+          <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>权限管理</span>
@@ -49,7 +49,7 @@
             </el-menu-item>
           </el-submenu>
           <!-- 商品管理 -->
-           <el-submenu index="3">
+          <el-submenu index="3">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>商品管理</span>
@@ -62,13 +62,13 @@
               <i class="el-icon-menu"></i>
               <span slot="title">分类参数</span>
             </el-menu-item>
-             <el-menu-item index="3-3">
+            <el-menu-item index="3-3">
               <i class="el-icon-menu"></i>
               <span slot="title">商品分类</span>
             </el-menu-item>
           </el-submenu>
           <!-- 订单管理 -->
-           <el-submenu index="4">
+          <el-submenu index="4">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>订单管理</span>
@@ -79,7 +79,7 @@
             </el-menu-item>
           </el-submenu>
           <!-- 数据统计 -->
-           <el-submenu index="5">
+          <el-submenu index="5">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>数据统计</span>
@@ -97,7 +97,17 @@
 </template>
 
 <script>
-export default {}
+export default {
+  beforeCreate () {
+    // 获取token
+    const token = localStorage.getItem('token')
+    // 如果token没有，返回登录页面
+    if (!token) {
+      this.$router.push({ name: 'login' })
+    }
+    // 如果token存在，继续渲染组件
+  }
+}
 </script>
 
 <style lang="">
