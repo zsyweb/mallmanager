@@ -25,32 +25,33 @@ export default {
   },
   methods: {
     // 登录请求
-    handleLogin () {
-      this.$http.get('login', {params: {
+    async handleLogin () {
+      // 让异步代码ajax看起来像同步代码
+      const res = await this.$http.get('login', {params: {
         username: this.formdata.username,
         password: this.formdata.password
       }
       })
       // this.$http.post('login', this.formdata)
-        .then(res => {
-          // console.log(res)
-          // const {
-          //   data,
-          //   meta: { msg, status }
-          // } = res.data
-          const { meta: { msg, status } } = res.data
-          // 登录成功
-          if (status === 200) {
-          // 1.跳转home
-            // this.$router.push({name: 'home'})
-            this.$message.success(msg)
-          } else {
-            this.$message.error(msg)
-          }
-          // 2.提示成功
-          // 不成功
-        }
-        )
+      // .then(res => {
+      // console.log(res)
+      // const {
+      //   data,
+      //   meta: { msg, status }
+      // } = res.data
+      const { meta: { msg, status } } = res.data
+      // 登录成功
+      if (status === 200) {
+        // 1.跳转home
+        this.$router.push({name: 'home'})
+        this.$message.success(msg)
+      } else {
+        this.$message.error(msg)
+      }
+      // 2.提示成功
+      // 不成功
+      // }
+      // )
     }
   }
 }
